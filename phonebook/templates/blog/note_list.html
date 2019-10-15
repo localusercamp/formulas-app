@@ -1,0 +1,32 @@
+{% load static %}
+<head>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="{% static 'css/note.css' %}">
+</head>
+
+
+<body>
+    <div class="content container">
+    <div class="row">
+        <div class="col-md-8">
+            {% for note in notes %}
+                <div class="note">
+                    <div class="date">
+                        <p>Опубликовано: {{ note.published_date }}</p>
+                    </div>
+                    <h1><a href="">{{ note.title }}</a></h1>
+                    <p>
+                        {% if note.description|length > 0 %}
+                        {{ note.description|linebreaksbr }}
+                        {% else %}
+                        Nothing...
+                        {%endif%}
+                    </p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+</body>

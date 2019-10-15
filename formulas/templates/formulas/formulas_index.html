@@ -1,0 +1,9 @@
+{% extends 'formulas/base.html' %}
+
+{% block content %}
+    {% for formula in formulas %}
+    <div class="formula">
+        <h1 class="clc"><a class="clc" href="{% url 'formula_detail' pk=formula.pk %}">{{ formula.title }}</a></h1>
+    </div>
+    {% endfor %}
+{% endblock %}

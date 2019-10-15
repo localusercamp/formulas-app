@@ -1,0 +1,19 @@
+{% extends 'formulas/base.html' %}
+
+{% block content %}
+<button id="back" style="display:block; margin:20px 0px 20px;">Назад</button>
+    <div class="formula">
+        {% if formula.published_date %}
+            <div class="date">
+                {{ formula.published_date }}
+            </div>
+        {% endif %}
+        <h1>{{ formula.title }}</h1>
+        <p class="expression">{{ formula.expression }}</p>
+        <div id="content">
+        </div>
+        <button id="butt" style="display:block; margin-bottom:20px;">Рассчитать</button>
+        <p style="padding-right:20px; display:inline-block;">Ответ</p>
+        <input id="result" style="display:inline-block;">
+    </div>
+{% endblock %}

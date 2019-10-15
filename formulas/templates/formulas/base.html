@@ -1,0 +1,107 @@
+{% load static %}
+<head>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="{% static 'css/formulas.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+
+
+<body style="background-color:#d9d9d9; ">
+    <script>
+
+        var right = "";
+        var wordlist = [];
+        $(document).ready(function(){
+                function estPohoshie(arr, key){
+                    for(let i = 0; i < arr.length; i++){
+                        if(arr[i] == key)
+                            return true;
+                    }
+                    return false;
+                }
+
+                String.prototype.replaceAll = function(str1, str2, ignore)
+                {
+                    return this.replace(new RegExp(str1.replace(/([\/\,\!\\\^\$\{\}\[\]\(\)\.\*\+\?\|\<\>\-\&])/g,"\\$&"),(ignore?"gi":"g")),(typeof(str2)=="string")?str2.replace(/\$/g,"$$$$"):str2);
+                }
+
+                var exptext = $(".expression").text();
+                exptext.replace(/ /g, "");
+                var arr = exptext.split("=");
+                var f = arr[0];
+                right = arr[1];
+
+                var word = "";
+
+                for(let i = 0; i < right.length; i++){//получение словаря
+                    if(right[i].match(/[a-z]/i))
+                        word += right[i];
+                    else if(right[i].match(/[а-я]/i))
+                        word += right[i];
+                    //else if(right[i] == '(' || right[i] == ')'){}
+                    else if(word != ""){
+                        if(!estPohoshie(wordlist, word))
+                            wordlist.push(word);
+                        word = "";
+                    }
+                    if(i == right.length -1){
+                        if(word != ""){
+                            if(!estPohoshie(wordlist, word))
+                                wordlist.push(word);
+                        }
+                    }
+                }
+
+                for(let i = 0; i < wordlist.length; i++){//создание HTML-тегов
+                    var _div = document.createElement("div");
+                        _div.setAttribute("style", "display:block; padding-bottom:20px");
+
+                    var _lebl = document.createElement("p");
+                        _lebl.innerHTML = wordlist[i];
+                        _lebl.setAttribute("style", "display:inline-block; padding-right:20px");
+                        _div.appendChild(_lebl);
+
+                    var _input = document.createElement("input");
+                        _input.setAttribute("id", "input"+wordlist[i]);
+                        _input.value = 0;
+                        _div.appendChild(_input);
+
+                    $("#content").append(_div)
+                }
+
+                $("#butt").click(function(){
+                    //написать расчет по данным, их вывод и запустить на инет
+                    var evaluable = right;
+                    for(let i = 0; i < wordlist.length; i++){
+                        var inptval = $("#input" + wordlist[i]).val();
+                        var evaluable = evaluable.replaceAll(wordlist[i], inptval);
+                    }
+                    document.getElementById("result").value = eval(evaluable);
+                })
+
+                $("#back").click(function(){
+                    window.location.href = window.location.href.substring(0, window.location.href.search("formulas"));
+                })
+            });
+    </script>
+    <div class="content container">
+        <button class="hrf" style="margin-top:20px;">Добавить формулу</button>
+        <script>
+            $(".hrf").click(function(){
+                if(window.location.href.includes("formulas")){
+                    window.location.href = window.location.href.substring(0, window.location.href.search("formulas")) + "admin";
+                }
+                else{
+                    window.location.href = "../admin";
+                }
+            })
+        </script>
+        <div class="row">
+            <div class="col-md-8">
+            {% block content %}
+            {% endblock %}
+            </div>
+        </div>
+    </div>
+</body>
